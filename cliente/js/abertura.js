@@ -1,14 +1,22 @@
 export default class abertura extends Phaser.Scene {
 
-  constructor () {
+  constructor() {
     super('abertura')
   }
 
-  preload () {
+  init() { }
+
+  preload() {
     this.load.image('fundo', 'assets/abertura-fundo.png')
   }
 
-  create () {
+  create() {
     this.add.image(400, 225, 'fundo')
+    .setInteractive()
+    .on('pointerdown', () => {
+      this.scene.start('precarregamento')
+    })
   }
+
+  update() { }
 }
