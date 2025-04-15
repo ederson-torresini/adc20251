@@ -4,11 +4,24 @@ export default class fase1 extends Phaser.Scene {
     super('fase1')
   }
 
-  init() { }
+  preload() {
+    this.load.spritesheet('alien', 'assets/alien.png', {
+      frameWidth: 64,
+      frameHeight: 64
+    })
+  }
 
-  preload() { }
+  create() {
+    this.alien = this.physics.add.sprite(100, 100, 'alien')
 
-  create() { }
+    this.anims.create({
+      key: 'alien-direita',
+      frames: this.anims.generateFrameNumbers('alien', { start: 260, end: 267 }),
+      frameRate: 10,
+      repeat: -1
+    })
 
-  update() { }
+    this.alien.play('alien-direita')
+    this.alien.setVelocityX(100)
+   }
 }

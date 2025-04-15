@@ -4,13 +4,7 @@ export default class sala extends Phaser.Scene {
     super('sala')
   }
 
-  init() { }
-
-  preload() { }
-
   create() {
     this.scene.start('fase1')
   }
-
-  update() { }
 }
