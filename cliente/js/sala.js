@@ -1,10 +1,9 @@
 export default class sala extends Phaser.Scene {
-
   constructor() {
-    super('sala')
+    super("sala");
   }
 
   create() {
-    this.scene.start('fase1')
+    this.scene.start("fase1");
   }
 }
