@@ -47,6 +47,7 @@ export default class fase1 extends Phaser.Scene {
     ]);
 
     this.personagemLocal = this.physics.add.sprite(100, 100, "alien");
+    this.cameras.main.startFollow(this.personagemLocal);
 
     this.layerObjetos.setCollisionByProperty({ collides: true });
     this.physics.add.collider(
@@ -87,17 +88,24 @@ export default class fase1 extends Phaser.Scene {
     });
 
     this.contador = 1200;
-    this.contadorTexto = this.add.text(10, 10, `Iniciando...`, {
-      fontSize: "32px",
-      fill: "#fff",
-    });
+    this.contadorTexto = this.add
+      .text(10, 10, `Iniciando...`, {
+        fontSize: "32px",
+        fill: "#fff",
+      })
+      .setScrollFactor(0);
+
     this.time.addEvent({
       delay: 1000,
       callback: () => {
         this.contador--;
         const minutos = Math.floor(this.contador / 60);
-        const segundos = Math.floor((this.contador % 60));
-        this.contadorTexto.setText(`Tempo restante: ${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`);
+        const segundos = Math.floor(this.contador % 60);
+        this.contadorTexto.setText(
+          `Tempo restante: ${String(minutos).padStart(2, "0")}:${String(
+            segundos
+          ).padStart(2, "0")}`
+        );
         if (this.contador <= 0) {
           //this.trilha.stop();
           this.scene.stop();
