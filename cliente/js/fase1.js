@@ -23,9 +23,15 @@ export default class fase1 extends Phaser.Scene {
       "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js",
       true
     );
+
+    this.load.audio("trilha-sonora", "assets/trilha-sonora.mp3");
+    this.load.audio("zumbi", "assets/zumbi.mp3");
   }
 
   create() {
+    this.trilha = this.sound.add("trilha-sonora", { loop: true }).play();
+    this.zumbi = this.sound.add("zumbi");
+
     this.tilemapMapa = this.make.tilemap({ key: "mapa" });
 
     this.tilesetGrama = this.tilemapMapa.addTilesetImage("grama");
@@ -43,7 +49,15 @@ export default class fase1 extends Phaser.Scene {
     this.personagemLocal = this.physics.add.sprite(100, 100, "alien");
 
     this.layerObjetos.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.personagemLocal, this.layerObjetos);
+    this.physics.add.collider(
+      this.personagemLocal,
+      this.layerObjetos,
+      () => {
+        this.zumbi.play();
+      },
+      null,
+      this
+    );
 
     this.anims.create({
       key: "personagem-andando-direita",
@@ -70,6 +84,28 @@ export default class fase1 extends Phaser.Scene {
       radius: 50, // Raio do joystick
       base: this.add.circle(120, 360, 50, 0x888888),
       thumb: this.add.circle(120, 360, 25, 0xcccccc),
+    });
+
+    this.contador = 1200;
+    this.contadorTexto = this.add.text(10, 10, `Iniciando...`, {
+      fontSize: "32px",
+      fill: "#fff",
+    });
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.contador--;
+        const minutos = Math.floor(this.contador / 60);
+        const segundos = Math.floor((this.contador % 60));
+        this.contadorTexto.setText(`Tempo restante: ${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`);
+        if (this.contador <= 0) {
+          //this.trilha.stop();
+          this.scene.stop();
+          this.scene.start("finalTriste");
+        }
+      },
+      callbackScope: this,
+      loop: true,
     });
   }
 

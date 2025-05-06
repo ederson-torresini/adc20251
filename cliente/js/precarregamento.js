@@ -20,6 +20,8 @@ export default class precarregamento extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     });
+    this.load.audio("trilha-sonora", "assets/trilha-sonora.mp3");
+    this.load.audio("zumbi", "assets/zumbi.mp3");
   }
 
   create() {
