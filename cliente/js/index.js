@@ -10,6 +10,12 @@ class Game extends Phaser.Game {
   constructor() {
     super(config);
 
+    this.socket = io();
+
+    this.socket.on("connect", () => {
+      console.log(`Usuário ${this.socket.id} conectado no servidor`);
+    });
+
     this.scene.add("abertura", abertura);
     this.scene.add("precarregamento", precarregamento);
     this.scene.add("sala", sala);
@@ -17,7 +23,7 @@ class Game extends Phaser.Game {
     this.scene.add("finalFeliz", finalFeliz);
     this.scene.add("finalTriste", finalTriste);
 
-    this.scene.start("abertura");
+    this.scene.start("sala");
   }
 }
 
