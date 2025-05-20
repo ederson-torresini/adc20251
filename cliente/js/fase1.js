@@ -1,3 +1,5 @@
+/*global Phaser*/
+/*eslint no-undef: "error"*/
 export default class fase1 extends Phaser.Scene {
   constructor() {
     super("fase1");
@@ -13,15 +15,20 @@ export default class fase1 extends Phaser.Scene {
     this.load.image("sombras", "assets/mapa/sombras.png");
     this.load.image("itens", "assets/mapa/itens.png");
 
-    this.load.spritesheet("alien", "assets/alien.png", {
+    this.load.spritesheet("alien-cinza", "assets/alien-cinza.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
+
+    this.load.spritesheet("alien-verde", "assets/alien-verde.png", {
       frameWidth: 64,
       frameHeight: 64,
     });
 
     this.load.plugin(
       "rexvirtualjoystickplugin",
-      "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js",
-      true
+      "./js/rexvirtualjoystickplugin.min.js",
+      true,
     );
 
     this.load.audio("trilha-sonora", "assets/trilha-sonora.mp3");
@@ -46,7 +53,119 @@ export default class fase1 extends Phaser.Scene {
       this.tilesetItens,
     ]);
 
-    this.personagemLocal = this.physics.add.sprite(100, 100, "alien");
+    if (this.game.jogadores.primeiro === this.game.socket.id) {
+      this.game.remoteConnection = new RTCPeerConnection(this.game.iceServers);
+      this.game.dadosJogo = this.game.remoteConnection.createDataChannel(
+        "dadosJogo",
+        { negotiated: true, id: 0 },
+      );
+
+      this.game.remoteConnection.onicecandidate = ({ candidate }) => {
+        candidate &&
+          this.game.socket.emit("candidate", this.game.sala, candidate);
+      };
+
+      this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
+        this.game.audio.srcObject = stream;
+      };
+
+      if (this.game.midias) {
+        this.game.midias
+          .getTracks()
+          .forEach((track) =>
+            this.game.remoteConnection.addTrack(track, this.game.midias),
+          );
+      }
+
+      this.game.socket.on("offer", (description) => {
+        this.game.remoteConnection
+          .setRemoteDescription(description)
+          .then(() => this.game.remoteConnection.createAnswer())
+          .then((answer) =>
+            this.game.remoteConnection.setLocalDescription(answer),
+          )
+          .then(() =>
+            this.game.socket.emit(
+              "answer",
+              this.game.sala,
+              this.game.remoteConnection.localDescription,
+            ),
+          );
+      });
+
+      this.game.socket.on("candidate", (candidate) => {
+        this.game.remoteConnection.addIceCandidate(candidate);
+      });
+
+      this.personagemLocal = this.physics.add.sprite(100, 100, "alien-cinza");
+      this.personagemRemoto = this.add.sprite(100, 150, "alien-verde");
+    } else if (this.game.jogadores.segundo === this.game.socket.id) {
+      this.game.localConnection = new RTCPeerConnection(this.game.iceServers);
+      this.game.dadosJogo = this.game.localConnection.createDataChannel(
+        "dadosJogo",
+        {
+          negotiated: true,
+          id: 0,
+        },
+      );
+
+      this.game.localConnection.onicecandidate = ({ candidate }) => {
+        this.game.socket.emit("candidate", this.game.sala, candidate);
+      };
+
+      this.game.localConnection.ontrack = ({ streams: [stream] }) => {
+        this.game.audio.srcObject = stream;
+      };
+
+      if (this.game.midias) {
+        this.game.midias
+          .getTracks()
+          .forEach((track) =>
+            this.game.localConnection.addTrack(track, this.game.midias),
+          );
+      }
+
+      this.game.localConnection
+        .createOffer()
+        .then((offer) => this.game.localConnection.setLocalDescription(offer))
+        .then(() =>
+          this.game.socket.emit(
+            "offer",
+            this.game.sala,
+            this.game.localConnection.localDescription,
+          ),
+        );
+
+      this.game.socket.on("answer", (description) => {
+        this.game.localConnection.setRemoteDescription(description);
+      });
+
+      this.game.socket.on("candidate", (candidate) => {
+        this.game.localConnection.addIceCandidate(candidate);
+      });
+
+      this.personagemLocal = this.physics.add.sprite(100, 150, "alien-verde");
+      this.personagemRemoto = this.add.sprite(100, 100, "alien-cinza");
+    } else {
+      this.scene.stop();
+      this.scene.start("sala");
+    }
+
+    this.game.dadosJogo.onopen = () => {
+      console.log("Conexão de dados aberta!");
+    };
+
+    // Processa as mensagens recebidas via DataChannel
+    this.game.dadosJogo.onmessage = (event) => {
+      const dados = JSON.parse(event.data);
+
+      if (dados.personagem) {
+        this.personagemRemoto.x = dados.personagem.x;
+        this.personagemRemoto.y = dados.personagem.y;
+        this.personagemRemoto.setFrame(dados.personagem.frame);
+      }
+    };
+
     this.cameras.main.startFollow(this.personagemLocal);
 
     this.layerObjetos.setCollisionByProperty({ collides: true });
@@ -57,25 +176,106 @@ export default class fase1 extends Phaser.Scene {
         this.zumbi.play();
       },
       null,
-      this
+      this,
     );
 
     this.anims.create({
-      key: "personagem-andando-direita",
-      frames: this.anims.generateFrameNumbers("alien", {
-        start: 260,
-        end: 267,
-      }),
+      key: "personagem-andando-cima",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 236,
+          end: 243,
+        },
+      ),
       frameRate: 10,
       repeat: -1,
     });
 
     this.anims.create({
+      key: "personagem-andando-baixo",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 252,
+          end: 259,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-andando-esquerda",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 244,
+          end: 251,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-andando-direita",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 260,
+          end: 267,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-parado-cima",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 28,
+          end: 28,
+        },
+      ),
+      frameRate: 1,
+    });
+
+    this.anims.create({
+      key: "personagem-parado-baixo",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 14,
+          end: 14,
+        },
+      ),
+      frameRate: 1,
+    });
+
+    this.anims.create({
+      key: "personagem-parado-esquerda",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 36,
+          end: 36,
+        },
+      ),
+      frameRate: 1,
+    });
+
+    this.anims.create({
       key: "personagem-parado-direita",
-      frames: this.anims.generateFrameNumbers("alien", {
-        start: 260,
-        end: 260,
-      }),
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 52,
+          end: 52,
+        },
+      ),
       frameRate: 1,
     });
 
@@ -103,8 +303,8 @@ export default class fase1 extends Phaser.Scene {
         const segundos = Math.floor(this.contador % 60);
         this.contadorTexto.setText(
           `Tempo restante: ${String(minutos).padStart(2, "0")}:${String(
-            segundos
-          ).padStart(2, "0")}`
+            segundos,
+          ).padStart(2, "0")}`,
         );
         if (this.contador <= 0) {
           //this.trilha.stop();
@@ -127,7 +327,6 @@ export default class fase1 extends Phaser.Scene {
 
       this.personagemLocal.setVelocity(velocityX, velocityY);
 
-      // Animação do personagem conforme a direção do movimento
       if (Math.abs(velocityX) > Math.abs(velocityY)) {
         if (velocityX > 0) {
           this.personagemLocal.anims.play("personagem-andando-direita", true);
@@ -138,30 +337,47 @@ export default class fase1 extends Phaser.Scene {
         }
       } else {
         if (velocityY > 0) {
-          this.personagemLocal.anims.play("personagem-andando-frente", true);
-          this.direcaoAtual = "frente";
+          this.personagemLocal.anims.play("personagem-andando-baixo", true);
+          this.direcaoAtual = "baixo";
         } else {
-          this.personagemLocal.anims.play("personagem-andando-tras", true);
-          this.direcaoAtual = "tras";
+          this.personagemLocal.anims.play("personagem-andando-cima", true);
+          this.direcaoAtual = "cima";
         }
       }
     } else {
-      // Se a força do joystick for baixa, o personagem para
       this.personagemLocal.setVelocity(0);
       switch (this.direcaoAtual) {
-        case "frente":
-          this.personagemLocal.anims.play("personagem-parado-frente", true);
+        case "baixo":
+          this.personagemLocal.anims.play("personagem-parado-baixo");
           break;
         case "direita":
-          this.personagemLocal.anims.play("personagem-parado-direita", true);
+          this.personagemLocal.anims.play("personagem-parado-direita");
           break;
         case "esquerda":
-          this.personagemLocal.anims.play("personagem-parado-esquerda", true);
+          this.personagemLocal.anims.play("personagem-parado-esquerda");
           break;
-        case "tras":
-          this.personagemLocal.anims.play("personagem-parado-tras", true);
+        case "cima":
+          this.personagemLocal.anims.play("personagem-parado-cima");
           break;
       }
+    }
+
+    try {
+      if (this.game.dadosJogo.readyState === "open") {
+        if (this.personagemLocal) {
+          this.game.dadosJogo.send(
+            JSON.stringify({
+              personagem: {
+                x: this.personagemLocal.x,
+                y: this.personagemLocal.y,
+                frame: this.personagemLocal.frame.name,
+              },
+            }),
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 }

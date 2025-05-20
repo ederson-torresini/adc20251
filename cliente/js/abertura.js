@@ -1,3 +1,5 @@
+/*global Phaser*/
+/*eslint no-undef: "error"*/
 export default class abertura extends Phaser.Scene {
   constructor() {
     super("abertura");
@@ -15,6 +17,13 @@ export default class abertura extends Phaser.Scene {
       .sprite(400, 400, "botao")
       .setInteractive()
       .on("pointerdown", () => {
+        navigator.mediaDevices
+          .getUserMedia({ video: false, audio: true })
+          .then((stream) => {
+            this.game.midias = stream;
+          })
+          .catch((error) => console.error(error));
+        
         this.scene.stop();
         this.scene.start("precarregamento");
       });
