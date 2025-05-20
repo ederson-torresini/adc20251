@@ -14,12 +14,12 @@ export default class precarregamento extends Phaser.Scene {
   }
 
   preload() {
-    this.load.setPath("assets/")
+    this.load.setPath("assets/");
     this.load.image("grama", "mapa/grama.png");
     this.load.image("sombras", "mapa/sombras.png");
     this.load.image("itens", "mapa/itens.png");
     this.load.image("fundo", "abertura-fundo.png");
-    
+
     this.load.spritesheet("alien-cinza", "alien-cinza.png", {
       frameWidth: 64,
       frameHeight: 64,

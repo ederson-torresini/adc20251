@@ -61,8 +61,7 @@ export default class fase1 extends Phaser.Scene {
       );
 
       this.game.remoteConnection.onicecandidate = ({ candidate }) => {
-        candidate &&
-          this.game.socket.emit("candidate", this.game.sala, candidate);
+        this.game.socket.emit("candidate", this.game.sala, candidate);
       };
 
       this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
@@ -147,6 +146,7 @@ export default class fase1 extends Phaser.Scene {
       this.personagemLocal = this.physics.add.sprite(100, 150, "alien-verde");
       this.personagemRemoto = this.add.sprite(100, 100, "alien-cinza");
     } else {
+      window.alert("Sala cheia!")
       this.scene.stop();
       this.scene.start("sala");
     }
