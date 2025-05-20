@@ -14,16 +14,23 @@ export default class precarregamento extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("grama", "assets/mapa/grama.png");
-    this.load.image("sombras", "assets/mapa/sombras.png");
-    this.load.image("itens", "assets/mapa/itens.png");
-    this.load.image("fundo", "assets/abertura-fundo.png");
-    this.load.spritesheet("alien", "assets/alien.png", {
+    this.load.setPath("assets/")
+    this.load.image("grama", "mapa/grama.png");
+    this.load.image("sombras", "mapa/sombras.png");
+    this.load.image("itens", "mapa/itens.png");
+    this.load.image("fundo", "abertura-fundo.png");
+    
+    this.load.spritesheet("alien-cinza", "alien-cinza.png", {
       frameWidth: 64,
       frameHeight: 64,
     });
-    this.load.audio("trilha-sonora", "assets/trilha-sonora.mp3");
-    this.load.audio("zumbi", "assets/zumbi.mp3");
+    this.load.spritesheet("alien-verde", "alien-verde.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
+
+    this.load.audio("trilha-sonora", "trilha-sonora.mp3");
+    this.load.audio("zumbi", "zumbi.mp3");
   }
 
   create() {
