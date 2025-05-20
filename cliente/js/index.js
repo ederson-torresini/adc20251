@@ -1,3 +1,5 @@
+/*global Phaser, io*/
+/*eslint no-undef: "error"*/
 import config from "./config.js";
 import abertura from "./abertura.js";
 import precarregamento from "./precarregamento.js";
@@ -10,6 +12,14 @@ class Game extends Phaser.Game {
   constructor() {
     super(config);
 
+    this.audio = document.querySelector("audio");
+    this.iceServers = {
+      iceServers: [
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+      ],
+    };
     this.socket = io();
 
     this.socket.on("connect", () => {
@@ -23,7 +33,7 @@ class Game extends Phaser.Game {
     this.scene.add("finalFeliz", finalFeliz);
     this.scene.add("finalTriste", finalTriste);
 
-    this.scene.start("sala");
+    this.scene.start("abertura");
   }
 }
 
