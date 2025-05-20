@@ -102,10 +102,7 @@ export default class fase1 extends Phaser.Scene {
       this.game.localConnection = new RTCPeerConnection(this.game.iceServers);
       this.game.dadosJogo = this.game.localConnection.createDataChannel(
         "dadosJogo",
-        {
-          negotiated: true,
-          id: 0,
-        },
+        { negotiated: true, id: 0 },
       );
 
       this.game.localConnection.onicecandidate = ({ candidate }) => {
@@ -146,7 +143,7 @@ export default class fase1 extends Phaser.Scene {
       this.personagemLocal = this.physics.add.sprite(100, 150, "alien-verde");
       this.personagemRemoto = this.add.sprite(100, 100, "alien-cinza");
     } else {
-      window.alert("Sala cheia!")
+      window.alert("Sala cheia!");
       this.scene.stop();
       this.scene.start("sala");
     }
