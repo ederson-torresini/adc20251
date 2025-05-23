@@ -7,14 +7,14 @@ export default class abertura extends Phaser.Scene {
 
   preload() {
     this.load.image("fundo", "assets/abertura-fundo.png");
-    this.load.image("botao", "assets/botao.png");
+    this.load.image("vazio", "assets/vazio.png");
   }
 
   create() {
-    this.add.image(400, 225, "fundo");
+    this.add.image(225, 225, "fundo");
 
-    this.add
-      .sprite(400, 400, "botao")
+    this.botao = this.physics.add
+      .sprite(210, 265, "vazio")
       .setInteractive()
       .on("pointerdown", () => {
         navigator.mediaDevices
@@ -23,9 +23,15 @@ export default class abertura extends Phaser.Scene {
             this.game.midias = stream;
           })
           .catch((error) => console.error(error));
-        
+
         this.scene.stop();
         this.scene.start("precarregamento");
       });
+
+    this.titulo = this.add.text(580, 420, "Mapa do\nTesouro", {
+      fontFamily: "monospace",
+      fontSize: "96px",
+      color: "#ffffff",
+    }).rotation = Phaser.Math.DegToRad(270);
   }
 }

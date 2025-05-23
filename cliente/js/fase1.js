@@ -5,7 +5,7 @@ export default class fase1 extends Phaser.Scene {
     super("fase1");
 
     this.threshold = 0.1;
-    this.speed = 125;
+    this.speed = 100;
     this.direcaoAtual = undefined;
   }
 
@@ -15,12 +15,12 @@ export default class fase1 extends Phaser.Scene {
     this.load.image("sombras", "assets/mapa/sombras.png");
     this.load.image("itens", "assets/mapa/itens.png");
 
-    this.load.spritesheet("alien-cinza", "assets/alien-cinza.png", {
+    this.load.spritesheet("tobias", "assets/tobias.png", {
       frameWidth: 64,
       frameHeight: 64,
     });
 
-    this.load.spritesheet("alien-verde", "assets/alien-verde.png", {
+    this.load.spritesheet("lola", "assets/lola.png", {
       frameWidth: 64,
       frameHeight: 64,
     });
@@ -31,13 +31,13 @@ export default class fase1 extends Phaser.Scene {
       true,
     );
 
-    this.load.audio("trilha-sonora", "assets/trilha-sonora.mp3");
-    this.load.audio("zumbi", "assets/zumbi.mp3");
+    this.load.audio("trilha-sonora-fase1", "assets/trilha-sonora-fase1.mp3");
+    this.load.audio("sussurro", "assets/sussurro.mp3");
   }
 
   create() {
-    this.trilha = this.sound.add("trilha-sonora", { loop: true }).play();
-    this.zumbi = this.sound.add("zumbi");
+    this.trilha = this.sound.add("trilha-sonora-fase1", { loop: true }).play();
+    this.sussurro = this.sound.add("sussurro");
 
     this.tilemapMapa = this.make.tilemap({ key: "mapa" });
 
@@ -96,8 +96,8 @@ export default class fase1 extends Phaser.Scene {
         this.game.remoteConnection.addIceCandidate(candidate);
       });
 
-      this.personagemLocal = this.physics.add.sprite(100, 100, "alien-cinza");
-      this.personagemRemoto = this.add.sprite(100, 150, "alien-verde");
+      this.personagemLocal = this.physics.add.sprite(100, 100, "tobias");
+      this.personagemRemoto = this.add.sprite(100, 150, "lola");
     } else if (this.game.jogadores.segundo === this.game.socket.id) {
       this.game.localConnection = new RTCPeerConnection(this.game.iceServers);
       this.game.dadosJogo = this.game.localConnection.createDataChannel(
@@ -140,8 +140,8 @@ export default class fase1 extends Phaser.Scene {
         this.game.localConnection.addIceCandidate(candidate);
       });
 
-      this.personagemLocal = this.physics.add.sprite(100, 150, "alien-verde");
-      this.personagemRemoto = this.add.sprite(100, 100, "alien-cinza");
+      this.personagemLocal = this.physics.add.sprite(100, 150, "lola");
+      this.personagemRemoto = this.add.sprite(100, 100, "tobias");
     } else {
       window.alert("Sala cheia!");
       this.scene.stop();
@@ -170,63 +170,11 @@ export default class fase1 extends Phaser.Scene {
       this.personagemLocal,
       this.layerObjetos,
       () => {
-        this.zumbi.play();
+        this.sussurro.play();
       },
       null,
       this,
     );
-
-    this.anims.create({
-      key: "personagem-andando-cima",
-      frames: this.anims.generateFrameNumbers(
-        this.personagemLocal.texture.key,
-        {
-          start: 236,
-          end: 243,
-        },
-      ),
-      frameRate: 10,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: "personagem-andando-baixo",
-      frames: this.anims.generateFrameNumbers(
-        this.personagemLocal.texture.key,
-        {
-          start: 252,
-          end: 259,
-        },
-      ),
-      frameRate: 10,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: "personagem-andando-esquerda",
-      frames: this.anims.generateFrameNumbers(
-        this.personagemLocal.texture.key,
-        {
-          start: 244,
-          end: 251,
-        },
-      ),
-      frameRate: 10,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: "personagem-andando-direita",
-      frames: this.anims.generateFrameNumbers(
-        this.personagemLocal.texture.key,
-        {
-          start: 260,
-          end: 267,
-        },
-      ),
-      frameRate: 10,
-      repeat: -1,
-    });
 
     this.anims.create({
       key: "personagem-parado-cima",
@@ -276,6 +224,162 @@ export default class fase1 extends Phaser.Scene {
       frameRate: 1,
     });
 
+    this.anims.create({
+      key: "personagem-cavando-cima",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 28,
+          end: 35,
+        },
+      ),
+      frameRate: 10,
+      repeat: 3,
+    });
+
+    this.anims.create({
+      key: "personagem-cavando-baixo",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 44,
+          end: 51,
+        },
+      ),
+      frameRate: 10,
+      repeat: 3,
+    });
+
+    this.anims.create({
+      key: "personagem-cavando-esquerda",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 36,
+          end: 43,
+        },
+      ),
+      frameRate: 10,
+      repeat: 3,
+    });
+
+    this.anims.create({
+      key: "personagem-cavando-direita",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 52,
+          end: 59,
+        },
+      ),
+      frameRate: 10,
+      repeat: 3,
+    });
+
+    this.anims.create({
+      key: "personagem-andando-cima",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 60,
+          end: 68,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-andando-baixo",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 78,
+          end: 86,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-andando-esquerda",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 69,
+          end: 77,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-andando-direita",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 87,
+          end: 95,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-correndo-cima",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 236,
+          end: 243,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-correndo-baixo",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 252,
+          end: 259,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-correndo-esquerda",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 244,
+          end: 251,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "personagem-correndo-direita",
+      frames: this.anims.generateFrameNumbers(
+        this.personagemLocal.texture.key,
+        {
+          start: 260,
+          end: 267,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
+    });
+
     this.joystick = this.plugins.get("rexvirtualjoystickplugin").add(this, {
       x: 200,
       y: 310,
@@ -304,7 +408,7 @@ export default class fase1 extends Phaser.Scene {
           ).padStart(2, "0")}`,
         );
         if (this.contador <= 0) {
-          //this.trilha.stop();
+          this.trilha.stop();
           this.scene.stop();
           this.scene.start("finalTriste");
         }
@@ -319,25 +423,44 @@ export default class fase1 extends Phaser.Scene {
     const force = this.joystick.force;
 
     if (force > this.threshold) {
-      const velocityX = Math.cos(angle) * this.speed;
-      const velocityY = Math.sin(angle) * this.speed;
+      var velocityX = Math.cos(angle) * this.speed;
+      var velocityY = Math.sin(angle) * this.speed;
+      var movimento = "andando";
+
+      if (this.personagemLocal.texture.key === "lola") {
+        velocityX *= 2;
+        velocityY *= 2;
+        movimento = "correndo";
+      }
 
       this.personagemLocal.setVelocity(velocityX, velocityY);
 
       if (Math.abs(velocityX) > Math.abs(velocityY)) {
         if (velocityX > 0) {
-          this.personagemLocal.anims.play("personagem-andando-direita", true);
+          this.personagemLocal.anims.play(
+            "personagem-" + movimento + "-direita",
+            true,
+          );
           this.direcaoAtual = "direita";
         } else {
-          this.personagemLocal.anims.play("personagem-andando-esquerda", true);
+          this.personagemLocal.anims.play(
+            "personagem-" + movimento + "-esquerda",
+            true,
+          );
           this.direcaoAtual = "esquerda";
         }
       } else {
         if (velocityY > 0) {
-          this.personagemLocal.anims.play("personagem-andando-baixo", true);
+          this.personagemLocal.anims.play(
+            "personagem-" + movimento + "-baixo",
+            true,
+          );
           this.direcaoAtual = "baixo";
         } else {
-          this.personagemLocal.anims.play("personagem-andando-cima", true);
+          this.personagemLocal.anims.play(
+            "personagem-" + movimento + "-cima",
+            true,
+          );
           this.direcaoAtual = "cima";
         }
       }
