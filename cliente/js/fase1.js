@@ -28,8 +28,13 @@ export default class fase1 extends Phaser.Scene {
     this.load.plugin(
       "rexvirtualjoystickplugin",
       "./js/rexvirtualjoystickplugin.min.js",
-      true,
+      true
     );
+
+    this.load.spritesheet("tela-cheia", "assets/tela-cheia.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+    });
 
     this.load.audio("trilha-sonora-fase1", "assets/trilha-sonora-fase1.mp3");
     this.load.audio("sussurro", "assets/sussurro.mp3");
@@ -57,7 +62,7 @@ export default class fase1 extends Phaser.Scene {
       this.game.remoteConnection = new RTCPeerConnection(this.game.iceServers);
       this.game.dadosJogo = this.game.remoteConnection.createDataChannel(
         "dadosJogo",
-        { negotiated: true, id: 0 },
+        { negotiated: true, id: 0 }
       );
 
       this.game.remoteConnection.onicecandidate = ({ candidate }) => {
@@ -72,7 +77,7 @@ export default class fase1 extends Phaser.Scene {
         this.game.midias
           .getTracks()
           .forEach((track) =>
-            this.game.remoteConnection.addTrack(track, this.game.midias),
+            this.game.remoteConnection.addTrack(track, this.game.midias)
           );
       }
 
@@ -81,14 +86,14 @@ export default class fase1 extends Phaser.Scene {
           .setRemoteDescription(description)
           .then(() => this.game.remoteConnection.createAnswer())
           .then((answer) =>
-            this.game.remoteConnection.setLocalDescription(answer),
+            this.game.remoteConnection.setLocalDescription(answer)
           )
           .then(() =>
             this.game.socket.emit(
               "answer",
               this.game.sala,
-              this.game.remoteConnection.localDescription,
-            ),
+              this.game.remoteConnection.localDescription
+            )
           );
       });
 
@@ -102,7 +107,7 @@ export default class fase1 extends Phaser.Scene {
       this.game.localConnection = new RTCPeerConnection(this.game.iceServers);
       this.game.dadosJogo = this.game.localConnection.createDataChannel(
         "dadosJogo",
-        { negotiated: true, id: 0 },
+        { negotiated: true, id: 0 }
       );
 
       this.game.localConnection.onicecandidate = ({ candidate }) => {
@@ -117,7 +122,7 @@ export default class fase1 extends Phaser.Scene {
         this.game.midias
           .getTracks()
           .forEach((track) =>
-            this.game.localConnection.addTrack(track, this.game.midias),
+            this.game.localConnection.addTrack(track, this.game.midias)
           );
       }
 
@@ -128,8 +133,8 @@ export default class fase1 extends Phaser.Scene {
           this.game.socket.emit(
             "offer",
             this.game.sala,
-            this.game.localConnection.localDescription,
-          ),
+            this.game.localConnection.localDescription
+          )
         );
 
       this.game.socket.on("answer", (description) => {
@@ -173,7 +178,7 @@ export default class fase1 extends Phaser.Scene {
         this.sussurro.play();
       },
       null,
-      this,
+      this
     );
 
     this.anims.create({
@@ -183,7 +188,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 28,
           end: 28,
-        },
+        }
       ),
       frameRate: 1,
     });
@@ -195,7 +200,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 14,
           end: 14,
-        },
+        }
       ),
       frameRate: 1,
     });
@@ -207,7 +212,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 36,
           end: 36,
-        },
+        }
       ),
       frameRate: 1,
     });
@@ -219,7 +224,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 52,
           end: 52,
-        },
+        }
       ),
       frameRate: 1,
     });
@@ -231,7 +236,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 28,
           end: 35,
-        },
+        }
       ),
       frameRate: 10,
       repeat: 3,
@@ -244,7 +249,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 44,
           end: 51,
-        },
+        }
       ),
       frameRate: 10,
       repeat: 3,
@@ -257,7 +262,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 36,
           end: 43,
-        },
+        }
       ),
       frameRate: 10,
       repeat: 3,
@@ -270,7 +275,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 52,
           end: 59,
-        },
+        }
       ),
       frameRate: 10,
       repeat: 3,
@@ -283,7 +288,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 60,
           end: 68,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -296,7 +301,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 78,
           end: 86,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -309,7 +314,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 69,
           end: 77,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -322,7 +327,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 87,
           end: 95,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -335,7 +340,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 236,
           end: 243,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -348,7 +353,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 252,
           end: 259,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -361,7 +366,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 244,
           end: 251,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -374,7 +379,7 @@ export default class fase1 extends Phaser.Scene {
         {
           start: 260,
           end: 267,
-        },
+        }
       ),
       frameRate: 10,
       repeat: -1,
@@ -404,8 +409,8 @@ export default class fase1 extends Phaser.Scene {
         const segundos = Math.floor(this.contador % 60);
         this.contadorTexto.setText(
           `Tempo restante: ${String(minutos).padStart(2, "0")}:${String(
-            segundos,
-          ).padStart(2, "0")}`,
+            segundos
+          ).padStart(2, "0")}`
         );
         if (this.contador <= 0) {
           this.trilha.stop();
@@ -416,6 +421,20 @@ export default class fase1 extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+
+    this.telaCheia = this.add
+      .sprite(750, 50, "tela-cheia", 0)
+      .setInteractive()
+      .on("pointerdown", () => {
+        if (this.scale.isFullscreen) {
+          this.scale.stopFullscreen();
+          this.telaCheia.setFrame(0);
+        } else {
+          this.scale.startFullscreen();
+          this.telaCheia.setFrame(1);
+        }
+      })
+      .setScrollFactor(0);
   }
 
   update() {
@@ -439,13 +458,13 @@ export default class fase1 extends Phaser.Scene {
         if (velocityX > 0) {
           this.personagemLocal.anims.play(
             "personagem-" + movimento + "-direita",
-            true,
+            true
           );
           this.direcaoAtual = "direita";
         } else {
           this.personagemLocal.anims.play(
             "personagem-" + movimento + "-esquerda",
-            true,
+            true
           );
           this.direcaoAtual = "esquerda";
         }
@@ -453,13 +472,13 @@ export default class fase1 extends Phaser.Scene {
         if (velocityY > 0) {
           this.personagemLocal.anims.play(
             "personagem-" + movimento + "-baixo",
-            true,
+            true
           );
           this.direcaoAtual = "baixo";
         } else {
           this.personagemLocal.anims.play(
             "personagem-" + movimento + "-cima",
-            true,
+            true
           );
           this.direcaoAtual = "cima";
         }
@@ -492,7 +511,7 @@ export default class fase1 extends Phaser.Scene {
                 y: this.personagemLocal.y,
                 frame: this.personagemLocal.frame.name,
               },
-            }),
+            })
           );
         }
       }
