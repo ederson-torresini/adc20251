@@ -35,6 +35,7 @@ export default class sala extends Phaser.Scene {
             this.game.sala = sala.numero;
             this.game.socket.emit("entrar-na-sala", this.game.sala);
           });
+        sala.botao.setVisible(true);
       });
     }
 
@@ -45,7 +46,7 @@ export default class sala extends Phaser.Scene {
         this.scene.start("fase1");
       } else if (jogadores.primeiro) {
         this.salas.forEach((sala) => {
-          sala.botao.destroy();
+          sala.botao.setVisible(false);
         });
         this.add.text(10, 10, `Aguardando na sala ${this.game.sala}...`);
       }
