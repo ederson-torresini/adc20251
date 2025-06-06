@@ -17,7 +17,7 @@ export default class finalFeliz extends Phaser.Scene {
             .post(
               "https://feira-de-jogos.dev.br/api/v2/credit",
               {
-                product: 41, // id do jogo cadastrado no banco de dados da Feira de Jogos
+                product: 42, // id do jogo cadastrado no banco de dados da Feira de Jogos
                 value: 250, // crédito em tijolinhos
               },
               {
@@ -28,9 +28,11 @@ export default class finalFeliz extends Phaser.Scene {
             )
             .then(function (response) {
               console.log(response);
+              alert("Crédito adicionado!");
             })
             .catch(function (error) {
               console.error(error);
+              alert("Erro ao adicionar crédito :(");
             });
         }
       },
