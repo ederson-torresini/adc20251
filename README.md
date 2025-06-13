@@ -2,7 +2,7 @@
 
 *Sprites*:
 
-- [Tobias] (https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/#?body=Body_color_amber&head=Human_male_amber&shadow=Shadow_shadow&hair=Messy3_chestnut&clothes=Shortsleeve_black&legs=Long_Pants_navy&shoes=Basic_Shoes_white&weapon=Thrust_shovel&backpack_straps=Straps_leather&backpack=Backpack_leather)
+- [Tobias](https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/#?body=Body_color_amber&head=Human_male_amber&shadow=Shadow_shadow&hair=Messy3_chestnut&clothes=Shortsleeve_black&legs=Long_Pants_navy&shoes=Basic_Shoes_white&weapon=Thrust_shovel&backpack_straps=Straps_leather&backpack=Backpack_leather)
 
 - [Lola](https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/#?body=Body_color_light&head=Human_female_light&shadow=Shadow_shadow&hair=Sara_blonde&clothes=TShirt_pink&legs=Leggings_2_black&shoes=Basic_Shoes_pink&sex=teen&dress=Slit_dress_lavender)
 
